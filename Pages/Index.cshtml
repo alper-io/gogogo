@@ -1,0 +1,66 @@
+﻿@page "{editId?}"
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <form method="post" asp-page-handler="@((Model.EditId.HasValue) ? "Edit" : "Add")">
+            <input type="hidden" asp-for="EditId" />
+
+            <div class="form-group">
+                <label for="ClassName">Class Name</label>
+                <input type="text" class="form-control" id="ClassName" asp-for="ClassInfo.ClassName" required>
+                <span asp-validation-for="ClassInfo.ClassName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="StudentCount">Student Count</label>
+                <input type="number" class="form-control" id="StudentCount" asp-for="ClassInfo.StudentCount" required>
+                <span asp-validation-for="ClassInfo.StudentCount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="Description">Description</label>
+                <textarea class="form-control" id="Description" asp-for="ClassInfo.Description" required></textarea>
+                <span asp-validation-for="ClassInfo.Description" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                @(Model.EditId.HasValue ? "Edit" : "Add")
+            </button>
+        </form>
+    </div>
+
+    <div class="col-md-6">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Class Name</th>
+                    <th>Student Count</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in IndexModel.ClassInformationList)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.ClassName</td>
+                        <td>@item.StudentCount</td>
+                        <td>@item.Description</td>
+                        <td>
+                            <form method="get" style="display:inline;">
+                                <button class="btn btn-sm btn-warning" asp-route-editId="@item.Id">Edit</button>
+                            </form>
+                            <form method="post" asp-page-handler="Delete" style="display:inline;">
+                                <input type="hidden" name="deleteId" value="@item.Id" />
+                                <button class="btn btn-sm btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
